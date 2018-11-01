@@ -1,0 +1,45 @@
+{{- if and .Values.portal.enabled .Values.portal.ingress.enabled -}}
+{{- $releaseName := .Release.Name -}}
+{{- $serviceName := include "apollo.portal.fullname" . }}
+{{- $servicePort := .Values.portal.service.servicePort -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "apollo.portal.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.portal.name }}"
+{{- with .Values.portal.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.portal.ingress.annotations | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.portal.ingress.tls }}
+  tls:
+  {{- range .Values.portal.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.portal.ingress.hosts }}
+    {{- $url := splitList "/" . }}
+    - host: {{ first $url }}
+      http:
+        paths:
+          - path: /{{ rest $url | join "/" }}
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+  {{- end -}}
+{{- if .Values.portal.ingress.tls }}
+  tls:
+{{ toYaml .Values.portal.ingress.tls | indent 4 }}
+  {{- end -}}
+{{- end }}

@@ -1,0 +1,18 @@
+{{- if and .Values.portal.enabled (empty .Values.portal.configMapOverrideName) -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "apollo.portal.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    component: "{{ .Values.portal.name }}"
+data:
+{{- $root := . -}}
+{{- range $key, $value := .Values.portal.configurationFiles }}
+  {{ $key }}: |
+{{ toYaml $value | default "{}" | indent 4 }}
+{{- end -}}
+{{- end -}}

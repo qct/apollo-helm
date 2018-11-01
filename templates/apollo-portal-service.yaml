@@ -1,0 +1,39 @@
+{{- if .Values.portal.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "apollo.portal.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.portal.name }}"
+{{- if .Values.portal.service.annotations }}
+  annotations:
+{{ toYaml .Values.portal.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.portal.service.type }}
+  {{ if .Values.portal.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.portal.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{ end }}
+  {{ if and (eq "LoadBalancer" .Values.portal.service.type) .Values.portal.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.portal.service.loadBalancerIP }}
+  {{ end }}
+  ports:
+    - name: http
+      port: {{ .Values.portal.service.servicePort }}
+      protocol: TCP
+      targetPort: 8070
+    {{ if and (eq "NodePort" .Values.portal.service.type) .Values.portal.service.nodePort }}
+      nodePort: {{ .Values.portal.service.nodePort}}
+    {{ end }}
+  selector:
+    app: {{ template "apollo-helm.name" . }}
+    component: "{{ .Values.portal.name }}"
+    release: {{ .Release.Name }}
+{{- end }}

@@ -1,0 +1,39 @@
+{{- if .Values.configservice.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "apollo.configservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.configservice.name }}"
+{{- if .Values.configservice.service.annotations }}
+  annotations:
+{{ toYaml .Values.configservice.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.configservice.service.type }}
+  {{ if .Values.configservice.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.configservice.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{ end }}
+  {{ if and (eq "LoadBalancer" .Values.configservice.service.type) .Values.configservice.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.configservice.service.loadBalancerIP }}
+  {{ end }}
+  ports:
+    - name: http
+      port: {{ .Values.configservice.service.servicePort }}
+      protocol: TCP
+      targetPort: 8070
+    {{ if and (eq "NodePort" .Values.configservice.service.type) .Values.configservice.service.nodePort }}
+      nodePort: {{ .Values.configservice.service.nodePort}}
+    {{ end }}
+  selector:
+    app: {{ template "apollo-helm.name" . }}
+    component: "{{ .Values.configservice.name }}"
+    release: {{ .Release.Name }}
+{{- end }}

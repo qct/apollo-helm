@@ -1,0 +1,74 @@
+{{- if .Values.adminservice.enabled -}}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "apollo.adminservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.adminservice.name }}"
+spec:
+  replicas: {{ .Values.adminservice.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "apollo-helm.name" . }}
+        release: {{ .Release.Name }}
+        component: "{{ .Values.adminservice.name }}"
+    spec:
+#      serviceAccountName: {{ template "apollo.serviceAccountName.adminservice" . }}
+      containers:
+        - name: {{ template "apollo-helm.name" . }}-{{ .Values.adminservice.name }}
+          image: "{{ .Values.adminservice.image.repository }}:{{ .Values.adminservice.image.tag }}"
+          imagePullPolicy: "{{ .Values.adminservice.image.pullPolicy }}"
+          env:
+            - name: APOLLO_ADMIN_SERVICE_NAME
+              value: "service-apollo-admin-server-dev.sre"
+            {{- if .Values.configservicemysql.enabled }}
+            - name: DATASOURCES_URL
+              value: "jdbc:mysql://apollo-configservicemysql:3306/{{ .Values.configservicemysql.mysqlDatabase }}?characterEncoding=utf8"
+            - name: DATASOURCES_USERNAME
+              value: "{{ .Values.configservicemysql.mysqlUser }}"
+            - name: DATASOURCES_PASSWORD
+              value: "{{ .Values.configservicemysql.mysqlPassword }}"
+            {{- end }}
+            {{- range $key, $value := .Values.adminservice.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value }}
+            {{- end }}
+          ports:
+            - containerPort: 8090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+{{ toYaml .Values.adminservice.resources | indent 12 }}
+#          volumeMounts:
+#            - name: config-volume
+#              mountPath: /apollo-admin-server/config/application-github.properties
+#              subPath: application-github.properties
+    {{- if .Values.adminservice.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.adminservice.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.adminservice.tolerations }}
+      tolerations:
+{{ toYaml .Values.adminservice.tolerations | indent 8 }}
+    {{- end }}
+    {{- if .Values.adminservice.affinity }}
+      affinity:
+{{ toYaml .Values.adminservice.affinity | indent 8 }}
+    {{- end }}
+#      volumes:
+#        - name: config-volume
+#          configMap:
+#            name: {{ if .Values.adminservice.configMapOverrideName }}{{ .Release.Name }}-{{ .Values.adminservice.configMapOverrideName }}{{- else }}{{ template "apollo.adminservice.fullname" . }}{{- end }}
+#            items:
+#              - key: application-github.properties
+#                path: application-github.properties
+{{- end }}

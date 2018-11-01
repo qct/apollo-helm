@@ -1,0 +1,11 @@
+dependencies:
+- name: mysql
+  version: 0.10.2
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  alias: portalmysql
+  condition: portalmysql.enabled
+- name: mysql
+  version: 0.10.2
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  alias: configservicemysql
+  condition: configservicemysql.enabled

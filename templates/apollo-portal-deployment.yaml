@@ -1,0 +1,81 @@
+{{- if .Values.portal.enabled -}}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "apollo.portal.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.portal.name }}"
+spec:
+  replicas: {{ .Values.portal.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "apollo-helm.name" . }}
+        release: {{ .Release.Name }}
+        component: "{{ .Values.portal.name }}"
+    spec:
+#      serviceAccountName: {{ template "apollo.serviceAccountName.portal" . }}
+      containers:
+        - name: {{ template "apollo-helm.name" . }}-{{ .Values.portal.name }}
+          image: "{{ .Values.portal.image.repository }}:{{ .Values.portal.image.tag }}"
+          imagePullPolicy: "{{ .Values.portal.image.pullPolicy }}"
+          env:
+            - name: APOLLO_PORTAL_SERVICE_NAME
+              value: "service-apollo-portal-server.sre"
+            - name: DEV_META_SERVICE_NAME
+              value: "apollo-configservice"
+            {{- if .Values.portalmysql.enabled }}
+            - name: DATASOURCES_URL
+              value: "jdbc:mysql://apollo-portalmysql:3306/{{ .Values.portalmysql.mysqlDatabase }}?characterEncoding=utf8"
+            - name: DATASOURCES_USERNAME
+              value: "{{ .Values.portalmysql.mysqlUser }}"
+            - name: DATASOURCES_PASSWORD
+              value: "{{ .Values.portalmysql.mysqlPassword }}"
+            {{- end }}
+            {{- range $key, $value := .Values.portal.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value }}
+            {{- end }}
+          ports:
+            - containerPort: 8070
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8070
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+{{ toYaml .Values.portal.resources | indent 12 }}
+#          volumeMounts:
+#            - name: config-volume
+#              mountPath: /apollo-portal-server/config/application-github.properties
+#              subPath: application-github.properties
+#            - name: config-volume
+#              mountPath: /apollo-portal-server/config/apollo-env.properties
+#              subPath: apollo-env.properties
+    {{- if .Values.portal.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.portal.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.portal.tolerations }}
+      tolerations:
+{{ toYaml .Values.portal.tolerations | indent 8 }}
+    {{- end }}
+    {{- if .Values.portal.affinity }}
+      affinity:
+{{ toYaml .Values.portal.affinity | indent 8 }}
+    {{- end }}
+#      volumes:
+#        - name: config-volume
+#          configMap:
+#            name: {{ if .Values.portal.configMapOverrideName }}{{ .Release.Name }}-{{ .Values.portal.configMapOverrideName }}{{- else }}{{ template "apollo.portal.fullname" . }}{{- end }}
+#            items:
+#              - key: application-github.properties
+#                path: application-github.properties
+#              - key: apollo-env.properties
+#                path: apollo-env.properties
+{{- end }}

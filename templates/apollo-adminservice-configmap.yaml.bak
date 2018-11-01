@@ -1,0 +1,18 @@
+{{- if and .Values.adminservice.enabled (empty .Values.adminservice.configMapOverrideName) -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "apollo.adminservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    component: "{{ .Values.adminservice.name }}"
+data:
+{{- $root := . -}}
+{{- range $key, $value := .Values.adminservice.configurationFiles }}
+  {{ $key }}: |
+{{ toYaml $value | default "{}" | indent 4 }}
+{{- end -}}
+{{- end -}}
