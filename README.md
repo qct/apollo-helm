@@ -60,8 +60,8 @@ Many thanks to ctrip [Apollo](https://github.com/ctripcorp/apollo), they bring u
 many thanks to [AiotCEO](https://github.com/AiotCEO) for the contribution of the [appolo-on-kubernetes](https://github.com/ctripcorp/apollo/tree/master/scripts/apollo-on-kubernetes) part.
 
 ### Road map
-* Deploy Apollo for a single dev environment configuration management on a Kubernetes cluster
-* Deploy Apollo for customized environment (customization for environment name and quantity)
+* Deploy Apollo for a single dev environment configuration management on a Kubernetes cluster :heavy_check_mark: 
+* Deploy Apollo for customized environment (customization of environment quantity)
 
 >Tip: By now you can play with the chart for a single environment deployment.
 
