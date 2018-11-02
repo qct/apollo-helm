@@ -28,7 +28,7 @@ spec:
     - name: http
       port: {{ .Values.configservice.service.servicePort }}
       protocol: TCP
-      targetPort: 8070
+      targetPort: 8080
     {{ if and (eq "NodePort" .Values.configservice.service.type) .Values.configservice.service.nodePort }}
       nodePort: {{ .Values.configservice.service.nodePort}}
     {{ end }}
