@@ -44,7 +44,7 @@ spec:
             tcpSocket:
               port: 8080
             initialDelaySeconds: 30
-            timeoutSeconds: 30
+            timeoutSeconds: 90
           resources:
 {{ toYaml .Values.configservice.resources | indent 12 }}
 #          volumeMounts:

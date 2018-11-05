@@ -28,7 +28,7 @@ spec:
               value: "service-apollo-portal-server.sre"
             - name: DEV_META_SERVICE_NAME
               value: "apollo-configservice"
-            {{- if .Values.portalmysql.enabled }}
+          {{- if .Values.portalmysql.enabled }}
             - name: DATASOURCES_URL
               value: "jdbc:mysql://apollo-portalmysql:3306/{{ .Values.portalmysql.mysqlDatabase }}?characterEncoding=utf8"
             - name: DATASOURCES_USERNAME
@@ -47,7 +47,7 @@ spec:
               path: /
               port: 8070
             initialDelaySeconds: 30
-            timeoutSeconds: 30
+            timeoutSeconds: 90
           resources:
 {{ toYaml .Values.portal.resources | indent 12 }}
 #          volumeMounts:

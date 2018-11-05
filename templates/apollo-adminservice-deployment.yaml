@@ -26,7 +26,7 @@ spec:
           env:
             - name: APOLLO_ADMIN_SERVICE_NAME
               value: "service-apollo-admin-server-dev.sre"
-            {{- if .Values.configservicemysql.enabled }}
+          {{- if .Values.configservicemysql.enabled }}
             - name: DATASOURCES_URL
               value: "jdbc:mysql://apollo-configservicemysql:3306/{{ .Values.configservicemysql.mysqlDatabase }}?characterEncoding=utf8"
             - name: DATASOURCES_USERNAME
@@ -45,7 +45,7 @@ spec:
               path: /
               port: 8090
             initialDelaySeconds: 30
-            timeoutSeconds: 30
+            timeoutSeconds: 90
           resources:
 {{ toYaml .Values.adminservice.resources | indent 12 }}
 #          volumeMounts:
