@@ -24,8 +24,8 @@ adminservice:
 
   image:
     repository: harbor.k8s-dev.com/public/apollo-admin-server
-    tag: 1.1.3
-    pullPolicy: IfNotPresent
+    tag: 1.1.2
+    pullPolicy: Always
 
   ## Additional adminservice container environment variable
   ## For instance to add a http_proxy
@@ -99,8 +99,8 @@ configservice:
 
   image:
     repository: harbor.k8s-dev.com/public/apollo-config-server
-    tag: 1.1.3
-    pullPolicy: IfNotPresent
+    tag: 1.1.2
+    pullPolicy: Always
 
   ## Additional configservice container environment variable
   ## For instance to add a http_proxy
@@ -173,8 +173,8 @@ portal:
   replicaCount: 1
   image:
     repository: harbor.k8s-dev.com/public/apollo-portal-server
-    tag: 1.1.3
-    pullPolicy: IfNotPresent
+    tag: 1.1.2
+    pullPolicy: Always
 
   ## Additional portal container environment variable
   ## For instance to add a http_proxy
@@ -648,9 +648,7 @@ configservicemysql:
 
       # Config
       # ------------------------------------------------------------
-      INSERT INTO `ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
-      VALUES
-          ('eureka.service.url', 'default', 'http://apollo-configservice:8080/', 'Eureka服务Url，多个service以英文逗号分隔'),
+      INSERT INTO `ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)      VALUES          ('eureka.service.url', 'default', 'http://apollo-configservice:8080/', 'Eureka服务Url，多个service以英文逗号分隔'),
           ('namespace.lock.switch', 'default', 'false', '一次发布只能有一个人修改开关'),
           ('item.key.length.limit', 'default', '128', 'item key 最大长度限制'),
           ('item.value.length.limit', 'default', '20000', 'item value最大长度限制'),
@@ -697,8 +695,7 @@ portalmysql:
       # Create Database
       # ------------------------------------------------------------
       CREATE DATABASE IF NOT EXISTS ApolloPortalDB DEFAULT CHARACTER SET = utf8mb4;
-
-      Use ApolloPortalDB;
+            Use ApolloPortalDB;
 
       # Dump of table app
       # ------------------------------------------------------------
