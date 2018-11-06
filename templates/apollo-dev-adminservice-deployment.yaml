@@ -1,0 +1,76 @@
+{{- if .Values.devadminservice.enabled -}}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "apollo.devadminservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.devadminservice.name }}"
+spec:
+  replicas: {{ .Values.devadminservice.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "apollo-helm.name" . }}
+        release: {{ .Release.Name }}
+        component: "{{ .Values.devadminservice.name }}"
+    spec:
+#      serviceAccountName: {{ template "apollo.serviceAccountName.devadminservice" . }}
+      containers:
+        - name: {{ template "apollo-helm.name" . }}-{{ .Values.devadminservice.name }}
+          image: "{{ .Values.devadminservice.image.repository }}:{{ .Values.devadminservice.image.tag }}"
+          imagePullPolicy: "{{ .Values.devadminservice.image.pullPolicy }}"
+          env:
+            - name: APOLLO_ADMIN_SERVICE_NAME
+              value: "service-apollo-admin-server-dev.sre"
+            - name: "eureka.service.url"
+              value: "http://apollo-devconfigservice:8080/eureka/"
+            {{- if .Values.devconfigservicemysql.enabled }}
+            - name: DATASOURCES_URL
+              value: "jdbc:mysql://apollo-devconfigservicemysql:3306/{{ .Values.devconfigservicemysql.mysqlDatabase }}?characterEncoding=utf8"
+            - name: DATASOURCES_USERNAME
+              value: "{{ .Values.devconfigservicemysql.mysqlUser }}"
+            - name: DATASOURCES_PASSWORD
+              value: "{{ .Values.devconfigservicemysql.mysqlPassword }}"
+            {{- end }}
+            {{- range $key, $value := .Values.devadminservice.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value }}
+            {{- end }}
+          ports:
+            - containerPort: 8090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+{{ toYaml .Values.devadminservice.resources | indent 12 }}
+#          volumeMounts:
+#            - name: config-volume
+#              mountPath: /apollo-admin-server/config/application-github.properties
+#              subPath: application-github.properties
+    {{- if .Values.devadminservice.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.devadminservice.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.devadminservice.tolerations }}
+      tolerations:
+{{ toYaml .Values.devadminservice.tolerations | indent 8 }}
+    {{- end }}
+    {{- if .Values.devadminservice.affinity }}
+      affinity:
+{{ toYaml .Values.devadminservice.affinity | indent 8 }}
+    {{- end }}
+#      volumes:
+#        - name: config-volume
+#          configMap:
+#            name: {{ if .Values.devadminservice.configMapOverrideName }}{{ .Release.Name }}-{{ .Values.devadminservice.configMapOverrideName }}{{- else }}{{ template "apollo.devadminservice.fullname" . }}{{- end }}
+#            items:
+#              - key: application-github.properties
+#                path: application-github.properties
+{{- end }}

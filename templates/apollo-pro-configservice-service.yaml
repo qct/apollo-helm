@@ -1,0 +1,39 @@
+{{- if .Values.proconfigservice.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "apollo.proconfigservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.proconfigservice.name }}"
+{{- if .Values.proconfigservice.service.annotations }}
+  annotations:
+{{ toYaml .Values.proconfigservice.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.proconfigservice.service.type }}
+  {{ if .Values.proconfigservice.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.proconfigservice.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{ end }}
+  {{ if and (eq "LoadBalancer" .Values.proconfigservice.service.type) .Values.proconfigservice.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.proconfigservice.service.loadBalancerIP }}
+  {{ end }}
+  ports:
+    - name: http
+      port: {{ .Values.proconfigservice.service.servicePort }}
+      protocol: TCP
+      targetPort: 8080
+    {{ if and (eq "NodePort" .Values.proconfigservice.service.type) .Values.proconfigservice.service.nodePort }}
+      nodePort: {{ .Values.proconfigservice.service.nodePort}}
+    {{ end }}
+  selector:
+    app: {{ template "apollo-helm.name" . }}
+    component: "{{ .Values.proconfigservice.name }}"
+    release: {{ .Release.Name }}
+{{- end }}

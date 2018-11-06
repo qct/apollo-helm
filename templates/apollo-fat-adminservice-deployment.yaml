@@ -1,0 +1,76 @@
+{{- if .Values.fatadminservice.enabled -}}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "apollo.fatadminservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.fatadminservice.name }}"
+spec:
+  replicas: {{ .Values.fatadminservice.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "apollo-helm.name" . }}
+        release: {{ .Release.Name }}
+        component: "{{ .Values.fatadminservice.name }}"
+    spec:
+#      serviceAccountName: {{ template "apollo.serviceAccountName.fatadminservice" . }}
+      containers:
+        - name: {{ template "apollo-helm.name" . }}-{{ .Values.fatadminservice.name }}
+          image: "{{ .Values.fatadminservice.image.repository }}:{{ .Values.fatadminservice.image.tag }}"
+          imagePullPolicy: "{{ .Values.fatadminservice.image.pullPolicy }}"
+          env:
+            - name: APOLLO_ADMIN_SERVICE_NAME
+              value: "service-apollo-admin-server-fat.sre"
+            - name: "eureka.service.url"
+              value: "http://apollo-fatconfigservice:8080/eureka/"
+            {{- if .Values.fatconfigservicemysql.enabled }}
+            - name: DATASOURCES_URL
+              value: "jdbc:mysql://apollo-fatconfigservicemysql:3306/{{ .Values.fatconfigservicemysql.mysqlDatabase }}?characterEncoding=utf8"
+            - name: DATASOURCES_USERNAME
+              value: "{{ .Values.fatconfigservicemysql.mysqlUser }}"
+            - name: DATASOURCES_PASSWORD
+              value: "{{ .Values.fatconfigservicemysql.mysqlPassword }}"
+            {{- end }}
+            {{- range $key, $value := .Values.fatadminservice.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value }}
+            {{- end }}
+          ports:
+            - containerPort: 8090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+{{ toYaml .Values.fatadminservice.resources | indent 12 }}
+#          volumeMounts:
+#            - name: config-volume
+#              mountPath: /apollo-admin-server/config/application-github.properties
+#              subPath: application-github.properties
+    {{- if .Values.fatadminservice.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.fatadminservice.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.fatadminservice.tolerations }}
+      tolerations:
+{{ toYaml .Values.fatadminservice.tolerations | indent 8 }}
+    {{- end }}
+    {{- if .Values.fatadminservice.affinity }}
+      affinity:
+{{ toYaml .Values.fatadminservice.affinity | indent 8 }}
+    {{- end }}
+#      volumes:
+#        - name: config-volume
+#          configMap:
+#            name: {{ if .Values.fatadminservice.configMapOverrideName }}{{ .Release.Name }}-{{ .Values.fatadminservice.configMapOverrideName }}{{- else }}{{ template "apollo.fatadminservice.fullname" . }}{{- end }}
+#            items:
+#              - key: application-github.properties
+#                path: application-github.properties
+{{- end }}

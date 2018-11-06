@@ -26,9 +26,23 @@ spec:
           env:
             - name: APOLLO_PORTAL_SERVICE_NAME
               value: "service-apollo-portal-server.sre"
+            {{ if .Values.devconfigservice.enabled -}}
             - name: DEV_META_SERVICE_NAME
-              value: "apollo-configservice"
-          {{- if .Values.portalmysql.enabled }}
+              value: "apollo-devconfigservice"
+            {{- end }}
+            {{ if .Values.fatconfigservice.enabled -}}
+            - name: FAT_META_SERVICE_NAME
+              value: "apollo-fatconfigservice"
+            {{- end }}
+            {{ if .Values.uatconfigservice.enabled -}}
+            - name: UAT_META_SERVICE_NAME
+              value: "apollo-uatconfigservice"
+            {{- end }}
+            {{ if .Values.proconfigservice.enabled -}}
+            - name: PRO_META_SERVICE_NAME
+              value: "apollo-proconfigservice"
+            {{- end }}
+            {{- if .Values.portalmysql.enabled }}
             - name: DATASOURCES_URL
               value: "jdbc:mysql://apollo-portalmysql:3306/{{ .Values.portalmysql.mysqlDatabase }}?characterEncoding=utf8"
             - name: DATASOURCES_USERNAME
@@ -47,7 +61,7 @@ spec:
               path: /
               port: 8070
             initialDelaySeconds: 30
-            timeoutSeconds: 90
+            timeoutSeconds: 30
           resources:
 {{ toYaml .Values.portal.resources | indent 12 }}
 #          volumeMounts:

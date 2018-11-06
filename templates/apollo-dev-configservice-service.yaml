@@ -1,0 +1,39 @@
+{{- if .Values.devconfigservice.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "apollo.devconfigservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.devconfigservice.name }}"
+{{- if .Values.devconfigservice.service.annotations }}
+  annotations:
+{{ toYaml .Values.devconfigservice.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.devconfigservice.service.type }}
+  {{ if .Values.devconfigservice.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.devconfigservice.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{ end }}
+  {{ if and (eq "LoadBalancer" .Values.devconfigservice.service.type) .Values.devconfigservice.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.devconfigservice.service.loadBalancerIP }}
+  {{ end }}
+  ports:
+    - name: http
+      port: {{ .Values.devconfigservice.service.servicePort }}
+      protocol: TCP
+      targetPort: 8080
+    {{ if and (eq "NodePort" .Values.devconfigservice.service.type) .Values.devconfigservice.service.nodePort }}
+      nodePort: {{ .Values.devconfigservice.service.nodePort}}
+    {{ end }}
+  selector:
+    app: {{ template "apollo-helm.name" . }}
+    component: "{{ .Values.devconfigservice.name }}"
+    release: {{ .Release.Name }}
+{{- end }}

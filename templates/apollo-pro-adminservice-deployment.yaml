@@ -1,0 +1,76 @@
+{{- if .Values.proadminservice.enabled -}}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "apollo.proadminservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.proadminservice.name }}"
+spec:
+  replicas: {{ .Values.proadminservice.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "apollo-helm.name" . }}
+        release: {{ .Release.Name }}
+        component: "{{ .Values.proadminservice.name }}"
+    spec:
+#      serviceAccountName: {{ template "apollo.serviceAccountName.proadminservice" . }}
+      containers:
+        - name: {{ template "apollo-helm.name" . }}-{{ .Values.proadminservice.name }}
+          image: "{{ .Values.proadminservice.image.repository }}:{{ .Values.proadminservice.image.tag }}"
+          imagePullPolicy: "{{ .Values.proadminservice.image.pullPolicy }}"
+          env:
+            - name: APOLLO_ADMIN_SERVICE_NAME
+              value: "service-apollo-admin-server-pro.sre"
+            - name: "eureka.service.url"
+              value: "http://apollo-proconfigservice:8080/eureka/"
+            {{- if .Values.proconfigservicemysql.enabled }}
+            - name: DATASOURCES_URL
+              value: "jdbc:mysql://apollo-proconfigservicemysql:3306/{{ .Values.proconfigservicemysql.mysqlDatabase }}?characterEncoding=utf8"
+            - name: DATASOURCES_USERNAME
+              value: "{{ .Values.proconfigservicemysql.mysqlUser }}"
+            - name: DATASOURCES_PASSWORD
+              value: "{{ .Values.proconfigservicemysql.mysqlPassword }}"
+            {{- end }}
+            {{- range $key, $value := .Values.proadminservice.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value }}
+            {{- end }}
+          ports:
+            - containerPort: 8090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+{{ toYaml .Values.proadminservice.resources | indent 12 }}
+#          volumeMounts:
+#            - name: config-volume
+#              mountPath: /apollo-admin-server/config/application-github.properties
+#              subPath: application-github.properties
+    {{- if .Values.proadminservice.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.proadminservice.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.proadminservice.tolerations }}
+      tolerations:
+{{ toYaml .Values.proadminservice.tolerations | indent 8 }}
+    {{- end }}
+    {{- if .Values.proadminservice.affinity }}
+      affinity:
+{{ toYaml .Values.proadminservice.affinity | indent 8 }}
+    {{- end }}
+#      volumes:
+#        - name: config-volume
+#          configMap:
+#            name: {{ if .Values.proadminservice.configMapOverrideName }}{{ .Release.Name }}-{{ .Values.proadminservice.configMapOverrideName }}{{- else }}{{ template "apollo.proadminservice.fullname" . }}{{- end }}
+#            items:
+#              - key: application-github.properties
+#                path: application-github.properties
+{{- end }}

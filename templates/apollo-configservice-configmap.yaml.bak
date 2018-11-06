@@ -1,17 +1,17 @@
-{{- if and .Values.configservice.enabled (empty .Values.configservice.configMapOverrideName) -}}
+{{- if and .Values.devconfigservice.enabled (empty .Values.devconfigservice.configMapOverrideName) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "apollo.configservice.fullname" . }}
+  name: {{ template "apollo.devconfigservice.fullname" . }}
   labels:
     app: {{ template "apollo-helm.name" . }}
     chart: {{ template "apollo-helm.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    component: "{{ .Values.configservice.name }}"
+    component: "{{ .Values.devconfigservice.name }}"
 data:
 {{- $root := . -}}
-{{- range $key, $value := .Values.configservice.configurationFiles }}
+{{- range $key, $value := .Values.devconfigservice.configurationFiles }}
   {{ $key }}: |
 {{ toYaml $value | default "{}" | indent 4 }}
 {{- end -}}

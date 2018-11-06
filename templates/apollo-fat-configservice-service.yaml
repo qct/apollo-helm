@@ -1,0 +1,39 @@
+{{- if .Values.fatconfigservice.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "apollo.fatconfigservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.fatconfigservice.name }}"
+{{- if .Values.fatconfigservice.service.annotations }}
+  annotations:
+{{ toYaml .Values.fatconfigservice.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.fatconfigservice.service.type }}
+  {{ if .Values.fatconfigservice.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.fatconfigservice.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{ end }}
+  {{ if and (eq "LoadBalancer" .Values.fatconfigservice.service.type) .Values.fatconfigservice.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.fatconfigservice.service.loadBalancerIP }}
+  {{ end }}
+  ports:
+    - name: http
+      port: {{ .Values.fatconfigservice.service.servicePort }}
+      protocol: TCP
+      targetPort: 8080
+    {{ if and (eq "NodePort" .Values.fatconfigservice.service.type) .Values.fatconfigservice.service.nodePort }}
+      nodePort: {{ .Values.fatconfigservice.service.nodePort}}
+    {{ end }}
+  selector:
+    app: {{ template "apollo-helm.name" . }}
+    component: "{{ .Values.fatconfigservice.name }}"
+    release: {{ .Release.Name }}
+{{- end }}
