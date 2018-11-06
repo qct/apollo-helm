@@ -1,17 +1,17 @@
-{{- if and .Values.adminservice.enabled (empty .Values.adminservice.configMapOverrideName) -}}
+{{- if and .Values.devadminservice.enabled (empty .Values.devadminservice.configMapOverrideName) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "apollo.adminservice.fullname" . }}
+  name: {{ template "apollo.devadminservice.fullname" . }}
   labels:
     app: {{ template "apollo-helm.name" . }}
     chart: {{ template "apollo-helm.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    component: "{{ .Values.adminservice.name }}"
+    component: "{{ .Values.devadminservice.name }}"
 data:
 {{- $root := . -}}
-{{- range $key, $value := .Values.adminservice.configurationFiles }}
+{{- range $key, $value := .Values.devadminservice.configurationFiles }}
   {{ $key }}: |
 {{ toYaml $value | default "{}" | indent 4 }}
 {{- end -}}

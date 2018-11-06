@@ -1,0 +1,75 @@
+{{- if .Values.uatconfigservice.enabled -}}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "apollo.uatconfigservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.uatconfigservice.name }}"
+spec:
+  replicas: {{ .Values.uatconfigservice.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "apollo-helm.name" . }}
+        release: {{ .Release.Name }}
+        component: "{{ .Values.uatconfigservice.name }}"
+    spec:
+#      serviceAccountName: {{ template "apollo.serviceAccountName.uatconfigservice" . }}
+      containers:
+        - name: {{ template "apollo-helm.name" . }}-{{ .Values.uatconfigservice.name }}
+          image: "{{ .Values.uatconfigservice.image.repository }}:{{ .Values.uatconfigservice.image.tag }}"
+          imagePullPolicy: "{{ .Values.uatconfigservice.image.pullPolicy }}"
+          env:
+            - name: APOLLO_CONFIG_SERVICE_NAME
+              value: "service-apollo-config-server-uat.sre"
+            - name: "eureka.service.url"
+              value: "http://apollo-uatconfigservice:8080/eureka/"
+          {{- if .Values.uatconfigservicemysql.enabled }}
+            - name: DATASOURCES_URL
+              value: "jdbc:mysql://apollo-uatconfigservicemysql:3306/{{ .Values.uatconfigservicemysql.mysqlDatabase }}?characterEncoding=utf8"
+            - name: DATASOURCES_USERNAME
+              value: "{{ .Values.uatconfigservicemysql.mysqlUser }}"
+            - name: DATASOURCES_PASSWORD
+              value: "{{ .Values.uatconfigservicemysql.mysqlPassword }}"
+            {{- end }}
+            {{- range $key, $value := .Values.uatconfigservice.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value }}
+            {{- end }}
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+{{ toYaml .Values.uatconfigservice.resources | indent 12 }}
+#          volumeMounts:
+#            - name: config-volume
+#              mountPath: /apollo-config-server/config/application-github.properties
+#              subPath: application-github.properties
+    {{- if .Values.uatconfigservice.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.uatconfigservice.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.uatconfigservice.tolerations }}
+      tolerations:
+{{ toYaml .Values.uatconfigservice.tolerations | indent 8 }}
+    {{- end }}
+    {{- if .Values.uatconfigservice.affinity }}
+      affinity:
+{{ toYaml .Values.uatconfigservice.affinity | indent 8 }}
+    {{- end }}
+#      volumes:
+#        - name: config-volume
+#          configMap:
+#            name: {{ if .Values.uatconfigservice.configMapOverrideName }}{{ .Release.Name }}-{{ .Values.uatconfigservice.configMapOverrideName }}{{- else }}{{ template "apollo.uatconfigservice.fullname" . }}{{- end }}
+#            items:
+#              - key: application-github.properties
+#                path: application-github.properties
+{{- end }}

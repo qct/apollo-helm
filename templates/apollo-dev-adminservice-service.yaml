@@ -1,0 +1,39 @@
+{{- if .Values.devadminservice.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "apollo.devadminservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.devadminservice.name }}"
+{{- if .Values.devadminservice.service.annotations }}
+  annotations:
+{{ toYaml .Values.devadminservice.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.devadminservice.service.type }}
+  {{ if .Values.devadminservice.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.devadminservice.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{ end }}
+  {{ if and (eq "LoadBalancer" .Values.devadminservice.service.type) .Values.devadminservice.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.devadminservice.service.loadBalancerIP }}
+  {{ end }}
+  ports:
+    - name: http
+      port: {{ .Values.devadminservice.service.servicePort }}
+      protocol: TCP
+      targetPort: 8090
+    {{ if and (eq "NodePort" .Values.devadminservice.service.type) .Values.devadminservice.service.nodePort }}
+      nodePort: {{ .Values.devadminservice.service.nodePort}}
+    {{ end }}
+  selector:
+    app: {{ template "apollo-helm.name" . }}
+    component: "{{ .Values.devadminservice.name }}"
+    release: {{ .Release.Name }}
+{{- end }}

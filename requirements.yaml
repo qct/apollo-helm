@@ -7,5 +7,20 @@ dependencies:
 - name: mysql
   version: 0.10.2
   repository: https://kubernetes-charts.storage.googleapis.com/
-  alias: configservicemysql
-  condition: configservicemysql.enabled
+  alias: devconfigservicemysql
+  condition: devconfigservicemysql.enabled
+- name: mysql
+  version: 0.10.2
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  alias: fatconfigservicemysql
+  condition: fatconfigservicemysql.enabled
+- name: mysql
+  version: 0.10.2
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  alias: uatconfigservicemysql
+  condition: uatconfigservicemysql.enabled
+- name: mysql
+  version: 0.10.2
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  alias: proconfigservicemysql
+  condition: proconfigservicemysql.enabled

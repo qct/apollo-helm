@@ -1,0 +1,39 @@
+{{- if .Values.uatconfigservice.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "apollo.uatconfigservice.fullname" . }}
+  labels:
+    app: {{ template "apollo-helm.name" . }}
+    chart: {{ template "apollo-helm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "{{ .Values.uatconfigservice.name }}"
+{{- if .Values.uatconfigservice.service.annotations }}
+  annotations:
+{{ toYaml .Values.uatconfigservice.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.uatconfigservice.service.type }}
+  {{ if .Values.uatconfigservice.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.uatconfigservice.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{ end }}
+  {{ if and (eq "LoadBalancer" .Values.uatconfigservice.service.type) .Values.uatconfigservice.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.uatconfigservice.service.loadBalancerIP }}
+  {{ end }}
+  ports:
+    - name: http
+      port: {{ .Values.uatconfigservice.service.servicePort }}
+      protocol: TCP
+      targetPort: 8080
+    {{ if and (eq "NodePort" .Values.uatconfigservice.service.type) .Values.uatconfigservice.service.nodePort }}
+      nodePort: {{ .Values.uatconfigservice.service.nodePort}}
+    {{ end }}
+  selector:
+    app: {{ template "apollo-helm.name" . }}
+    component: "{{ .Values.uatconfigservice.name }}"
+    release: {{ .Release.Name }}
+{{- end }}
