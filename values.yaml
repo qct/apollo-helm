@@ -43,7 +43,7 @@ devadminservice:
   image:
     repository: qct222/apollo-admin-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional devadminservice container environment variable
   ## For instance to add a http_proxy
@@ -118,7 +118,7 @@ fatadminservice:
   image:
     repository: qct222/apollo-admin-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional fatadminservice container environment variable
   ## For instance to add a http_proxy
@@ -193,7 +193,7 @@ uatadminservice:
   image:
     repository: qct222/apollo-admin-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional uatadminservice container environment variable
   ## For instance to add a http_proxy
@@ -268,7 +268,7 @@ proadminservice:
   image:
     repository: qct222/apollo-admin-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional proadminservice container environment variable
   ## For instance to add a http_proxy
@@ -343,7 +343,7 @@ devconfigservice:
   image:
     repository: qct222/apollo-config-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional devconfigservice container environment variable
   ## For instance to add a http_proxy
@@ -418,7 +418,7 @@ fatconfigservice:
   image:
     repository: qct222/apollo-config-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional fatconfigservice container environment variable
   ## For instance to add a http_proxy
@@ -493,7 +493,7 @@ uatconfigservice:
   image:
     repository: qct222/apollo-config-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional uatconfigservice container environment variable
   ## For instance to add a http_proxy
@@ -568,7 +568,7 @@ proconfigservice:
   image:
     repository: qct222/apollo-config-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional proconfigservice container environment variable
   ## For instance to add a http_proxy
@@ -642,7 +642,7 @@ portal:
   image:
     repository: qct222/apollo-portal-server
     tag: 1.1.2
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Additional portal container environment variable
   ## For instance to add a http_proxy
@@ -750,7 +750,7 @@ devconfigservicemysql:
     size: 2Gi
     annotations: {}
   initializationFiles:
-    initializationFiles-portaldb.sql: |-
+    initializationFiles-configservice.sql: |-
       /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
       /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
       /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -1152,7 +1152,7 @@ fatconfigservicemysql:
     size: 2Gi
     annotations: {}
   initializationFiles:
-    initializationFiles-portaldb.sql: |-
+    initializationFiles-configservice.sql: |-
       /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
       /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
       /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -1554,7 +1554,7 @@ uatconfigservicemysql:
     size: 2Gi
     annotations: {}
   initializationFiles:
-    initializationFiles-portaldb.sql: |-
+    initializationFiles-configservice.sql: |-
       /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
       /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
       /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -1955,7 +1955,7 @@ proconfigservicemysql:
     size: 2Gi
     annotations: {}
   initializationFiles:
-    initializationFiles-portaldb.sql: |-
+    initializationFiles-configservice.sql: |-
       /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
       /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
       /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
