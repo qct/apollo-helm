@@ -35,7 +35,7 @@ The following table lists the configurable parameters of the Apollo chart and th
 As designed by Apollo, there are environments(DEV, FAT, UAT, PRO) supported by default, each environment need an `adminservice` & a `configservice`, 
 configurations of all environments can be managed by one portal, therefore, there are configurations for `adminservice` & `configservice` in four environments.
 
-**Two environments(DEV & PRO) are enabled in this helm chart.**, in case of you want to enable all four environments, set:
+**Two environments(DEV & PRO) are enabled in this helm chart**, in case of you want to enable all four environments, set:
 ```
 fatadminservice.enabled=true
 uatadminservice.enabled=true
