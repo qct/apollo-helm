@@ -41,7 +41,7 @@ devadminservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-admin-server
+    repository: qct222/apollo-admin-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -116,7 +116,7 @@ fatadminservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-admin-server
+    repository: qct222/apollo-admin-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -191,7 +191,7 @@ uatadminservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-admin-server
+    repository: qct222/apollo-admin-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -266,7 +266,7 @@ proadminservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-admin-server
+    repository: qct222/apollo-admin-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -341,7 +341,7 @@ devconfigservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-config-server
+    repository: qct222/apollo-config-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -416,7 +416,7 @@ fatconfigservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-config-server
+    repository: qct222/apollo-config-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -491,7 +491,7 @@ uatconfigservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-config-server
+    repository: qct222/apollo-config-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -566,7 +566,7 @@ proconfigservice:
   replicaCount: 1
 
   image:
-    repository: harbor.k8s-dev.com/public/apollo-config-server
+    repository: qct222/apollo-config-server
     tag: 1.1.2
     pullPolicy: Always
 
@@ -640,7 +640,7 @@ portal:
   name: portal
   replicaCount: 1
   image:
-    repository: harbor.k8s-dev.com/public/apollo-portal-server
+    repository: qct222/apollo-portal-server
     tag: 1.1.2
     pullPolicy: Always
 
