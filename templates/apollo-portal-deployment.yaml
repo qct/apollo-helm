@@ -26,28 +26,30 @@ spec:
           env:
             - name: APOLLO_PORTAL_SERVICE_NAME
               value: "service-apollo-portal-server.sre"
+            - name: spring.profiles.active
+              value: "auth"
             {{ if .Values.devconfigservice.enabled -}}
-            - name: DEV_META_SERVICE_NAME
-              value: "apollo-devconfigservice"
+            - name: DEV_META
+              value: "http://apollo-devconfigservice:8080"
             {{- end }}
             {{ if .Values.fatconfigservice.enabled -}}
-            - name: FAT_META_SERVICE_NAME
-              value: "apollo-fatconfigservice"
+            - name: FAT_META
+              value: "http://apollo-fatconfigservice:8080"
             {{- end }}
             {{ if .Values.uatconfigservice.enabled -}}
-            - name: UAT_META_SERVICE_NAME
-              value: "apollo-uatconfigservice"
+            - name: UAT_META
+              value: "http://apollo-uatconfigservice:8080"
             {{- end }}
             {{ if .Values.proconfigservice.enabled -}}
-            - name: PRO_META_SERVICE_NAME
-              value: "apollo-proconfigservice"
+            - name: PRO_META
+              value: "http://apollo-proconfigservice:8080"
             {{- end }}
             {{- if .Values.portalmysql.enabled }}
-            - name: DATASOURCES_URL
+            - name: spring.datasource.url
               value: "jdbc:mysql://apollo-portalmysql:3306/{{ .Values.portalmysql.mysqlDatabase }}?characterEncoding=utf8"
-            - name: DATASOURCES_USERNAME
+            - name: spring.datasource.username
               value: "{{ .Values.portalmysql.mysqlUser }}"
-            - name: DATASOURCES_PASSWORD
+            - name: spring.datasource.password
               value: "{{ .Values.portalmysql.mysqlPassword }}"
             {{- end }}
             {{- range $key, $value := .Values.portal.extraEnv }}

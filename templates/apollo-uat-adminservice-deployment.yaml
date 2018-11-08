@@ -29,11 +29,11 @@ spec:
             - name: "eureka.service.url"
               value: "http://apollo-uatconfigservice:8080/eureka/"
             {{- if .Values.uatconfigservicemysql.enabled }}
-            - name: DATASOURCES_URL
+            - name: spring.datasource.url
               value: "jdbc:mysql://apollo-uatconfigservicemysql:3306/{{ .Values.uatconfigservicemysql.mysqlDatabase }}?characterEncoding=utf8"
-            - name: DATASOURCES_USERNAME
+            - name: spring.datasource.username
               value: "{{ .Values.uatconfigservicemysql.mysqlUser }}"
-            - name: DATASOURCES_PASSWORD
+            - name: spring.datasource.password
               value: "{{ .Values.uatconfigservicemysql.mysqlPassword }}"
             {{- end }}
             {{- range $key, $value := .Values.uatadminservice.extraEnv }}

@@ -41,8 +41,8 @@ devadminservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-admin-server
-    tag: 1.1.2
+    repository: qct222/apollo-adminservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional devadminservice container environment variable
@@ -116,8 +116,8 @@ fatadminservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-admin-server
-    tag: 1.1.2
+    repository: qct222/apollo-adminservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional fatadminservice container environment variable
@@ -191,8 +191,8 @@ uatadminservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-admin-server
-    tag: 1.1.2
+    repository: qct222/apollo-adminservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional uatadminservice container environment variable
@@ -266,8 +266,8 @@ proadminservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-admin-server
-    tag: 1.1.2
+    repository: qct222/apollo-adminservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional proadminservice container environment variable
@@ -341,8 +341,8 @@ devconfigservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-config-server
-    tag: 1.1.2
+    repository: qct222/apollo-configservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional devconfigservice container environment variable
@@ -416,8 +416,8 @@ fatconfigservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-config-server
-    tag: 1.1.2
+    repository: qct222/apollo-configservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional fatconfigservice container environment variable
@@ -491,8 +491,8 @@ uatconfigservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-config-server
-    tag: 1.1.2
+    repository: qct222/apollo-configservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional uatconfigservice container environment variable
@@ -566,8 +566,8 @@ proconfigservice:
   replicaCount: 1
 
   image:
-    repository: qct222/apollo-config-server
-    tag: 1.1.2
+    repository: qct222/apollo-configservice
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional proconfigservice container environment variable
@@ -640,8 +640,8 @@ portal:
   name: portal
   replicaCount: 1
   image:
-    repository: qct222/apollo-portal-server
-    tag: 1.1.2
+    repository: qct222/apollo-portal
+    tag: 1.2.0-SNAPSHOT
     pullPolicy: IfNotPresent
 
   ## Additional portal container environment variable

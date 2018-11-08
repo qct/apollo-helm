@@ -29,11 +29,11 @@ spec:
             - name: "eureka.service.url"
               value: "http://apollo-fatconfigservice:8080/eureka/"
             {{- if .Values.fatconfigservicemysql.enabled }}
-            - name: DATASOURCES_URL
+            - name: spring.datasource.url
               value: "jdbc:mysql://apollo-fatconfigservicemysql:3306/{{ .Values.fatconfigservicemysql.mysqlDatabase }}?characterEncoding=utf8"
-            - name: DATASOURCES_USERNAME
+            - name: spring.datasource.username
               value: "{{ .Values.fatconfigservicemysql.mysqlUser }}"
-            - name: DATASOURCES_PASSWORD
+            - name: spring.datasource.password
               value: "{{ .Values.fatconfigservicemysql.mysqlPassword }}"
             {{- end }}
             {{- range $key, $value := .Values.fatadminservice.extraEnv }}

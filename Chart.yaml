@@ -1,8 +1,8 @@
 apiVersion: v1
-appVersion: "1.1.1"
+appVersion: "1.2.0"
 description: A Helm chart for Kubernetes
 name: apollo
-version: 0.1.0
+version: 0.2.0
 home: https://github.com/ctripcorp/apollo
 icon: https://github.com/ctripcorp/apollo/blob/master/apollo-portal/src/main/resources/static/img/logo-detail.png
 maintainers:
