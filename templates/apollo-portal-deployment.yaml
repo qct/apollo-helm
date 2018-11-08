@@ -26,8 +26,6 @@ spec:
           env:
             - name: APOLLO_PORTAL_SERVICE_NAME
               value: "service-apollo-portal-server.sre"
-            - name: spring.profiles.active
-              value: "auth"
             {{ if .Values.devconfigservice.enabled -}}
             - name: DEV_META
               value: "http://apollo-devconfigservice:8080"
