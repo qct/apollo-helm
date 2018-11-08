@@ -280,7 +280,7 @@ uatconfigservicemysql=true
 As designed by Apollo, configservice and adminservice share a mysql instance, while portal should use its own mysql instance.
 
 ### Warning
-The apollo-helm repo is **unfinished**, take risks at your own if used in a production environment.  
+Take risks at your own if used in a production environment.  
 
 ### Thanks
 Many thanks to ctrip [Apollo](https://github.com/ctripcorp/apollo), they bring us a so great configuration management system,
