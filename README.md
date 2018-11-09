@@ -32,10 +32,10 @@ The command removes nearly all the Kubernetes components associated with the cha
 ### Configuration
 The following table lists the configurable parameters of the Apollo chart and their default values.
 
-As designed by Apollo, there are environments(DEV, FAT, UAT, PRO) supported by default, each environment need an `adminservice` & a `configservice`, 
-configurations of all environments can be managed by one portal, therefore, there are configurations for `adminservice` & `configservice` in four environments.
+As designed by Apollo, there are environments(DEV, FAT, UAT, PRO) supported by default, each environment needs an `adminservice` & a `configservice`, 
+configurations of all environments can be managed by one portal, therefore, there are configurations of `adminservice` & `configservice` in four environments.
 
-**Two environments(DEV & PRO) are enabled in this helm chart**, in case of you want to enable all four environments, set:
+**Two environments(DEV & PRO) are enabled in this helm chart by default**, in case of you want to enable all four environments, set:
 ```
 fatadminservice.enabled=true
 uatadminservice.enabled=true
@@ -290,7 +290,7 @@ many thanks to [AiotCEO](https://github.com/AiotCEO) for the contribution of the
 * Deploy Apollo for a single dev environment configuration management on a Kubernetes cluster :heavy_check_mark: 
 * Deploy Apollo for customized environment (customization of environment quantity) :heavy_check_mark:
 
->Tip: By now you can play with the chart for a dev & pro environment deployment.
+>Tip: Now you can use this chart to deploy any of the 4 environments(DEV, FAT, UAT, PRO), or a combination of them.
 
 ### Screenshots
 ![apollo-dev-deployment](images/apollo-dev-deployment.png)  
