@@ -7,7 +7,7 @@ Apollo helm is a helm chart for [Apollo](https://github.com/ctripcorp/apollo)(Co
 ```
 $ git clone https://github.com/qct/apollo-helm.git
 $ cd apollo-helm
-$ helm install --name my-release .
+$ bash hack/run.sh
 ```
 
 ### Introduction
@@ -35,12 +35,12 @@ The following table lists the configurable parameters of the Apollo chart and th
 As designed by Apollo, there are environments(DEV, FAT, UAT, PRO) supported by default, each environment needs an `adminservice` & a `configservice`, 
 configurations of all environments can be managed by one portal, therefore, there are configurations of `adminservice` & `configservice` in four environments.
 
-**Two environments(DEV & PRO) are enabled in this helm chart by default**, in case of you want to enable all four environments, set:
+**Four environments(DEV, FAT, UAT, PRO) are enabled in this helm chart by default**, 
+in case of you want to disable some environments, for example, disable UAT environment, set:
 ```
-fatadminservice.enabled=true
-uatadminservice.enabled=true
-fatconfigservicemysql=true
-uatconfigservicemysql=true
+uatadminservice.enabled=false
+uatconfigservice.enabled=false
+uatconfigservicemysql=false
 ```
 
 | Parameter               | Description                           | Default                                                    |
@@ -49,8 +49,8 @@ uatconfigservicemysql=true
 | `devadminservice.enabled` | If true, install adminservice in dev environment | `true` |
 | `devadminservice.name` | Name of adminservice in dev environment | `devadminservice` |
 | `devadminservice.replicaCount` | Desired number of adminservice pods in dev environment | `1` |
-| `devadminservice.image.repository` | Apollo devadminservice image | `qct222/apollo-admin-server` |
-| `devadminservice.image.tag` | Apollo devadminservice image version | `1.1.2` |
+| `devadminservice.image.repository` | Apollo devadminservice image | `qct222/apollo-adminservice` |
+| `devadminservice.image.tag` | Apollo devadminservice image version | `1.3.0-SNAPSHOT` |
 | `devadminservice.image.pullPolicy` | Apollo devadminservice image pull policy | `IfNotPresent` |
 | `devadminservice.extraEnv` | Additional Apollo devadminservice container environments | `{}` |
 | `devadminservice.resources` | devadminservice pod resource requests & limits | `{}` |
@@ -68,8 +68,8 @@ uatconfigservicemysql=true
 | `fatadminservice.enabled` | If true, install adminservice in dev environment | `true` |
 | `fatadminservice.name` | Name of adminservice in dev environment | `fatadminservice` |
 | `fatadminservice.replicaCount` | Desired number of adminservice pods in dev environment | `1` |
-| `fatadminservice.image.repository` | Apollo fatadminservice image | `qct222/apollo-admin-server` |
-| `fatadminservice.image.tag` | Apollo fatadminservice image version | `1.1.2` |
+| `fatadminservice.image.repository` | Apollo fatadminservice image | `qct222/apollo-adminservice` |
+| `fatadminservice.image.tag` | Apollo fatadminservice image version | `1.3.0-SNAPSHOT` |
 | `fatadminservice.image.pullPolicy` | Apollo fatadminservice image pull policy | `IfNotPresent` |
 | `fatadminservice.extraEnv` | Additional Apollo fatadminservice container environments | `{}` |
 | `fatadminservice.resources` | fatadminservice pod resource requests & limits | `{}` |
@@ -87,8 +87,8 @@ uatconfigservicemysql=true
 | `uatadminservice.enabled` | If true, install adminservice in dev environment | `true` |
 | `uatadminservice.name` | Name of adminservice in dev environment | `uatadminservice` |
 | `uatadminservice.replicaCount` | Desired number of adminservice pods in dev environment | `1` |
-| `uatadminservice.image.repository` | Apollo uatadminservice image | `qct222/apollo-admin-server` |
-| `uatadminservice.image.tag` | Apollo uatadminservice image version | `1.1.2` |
+| `uatadminservice.image.repository` | Apollo uatadminservice image | `qct222/apollo-adminservice` |
+| `uatadminservice.image.tag` | Apollo uatadminservice image version | `1.3.0-SNAPSHOT` |
 | `uatadminservice.image.pullPolicy` | Apollo uatadminservice image pull policy | `IfNotPresent` |
 | `uatadminservice.extraEnv` | Additional Apollo uatadminservice container environments | `{}` |
 | `uatadminservice.resources` | uatadminservice pod resource requests & limits | `{}` |
@@ -106,8 +106,8 @@ uatconfigservicemysql=true
 | `proadminservice.enabled` | If true, install adminservice in dev environment | `true` |
 | `proadminservice.name` | Name of adminservice in dev environment | `proadminservice` |
 | `proadminservice.replicaCount` | Desired number of adminservice pods in dev environment | `1` |
-| `proadminservice.image.repository` | Apollo proadminservice image | `qct222/apollo-admin-server` |
-| `proadminservice.image.tag` | Apollo proadminservice image version | `1.1.2` |
+| `proadminservice.image.repository` | Apollo proadminservice image | `qct222/apollo-adminservice` |
+| `proadminservice.image.tag` | Apollo proadminservice image version | `1.3.0-SNAPSHOT` |
 | `proadminservice.image.pullPolicy` | Apollo proadminservice image pull policy | `IfNotPresent` |
 | `proadminservice.extraEnv` | Additional Apollo proadminservice container environments | `{}` |
 | `proadminservice.resources` | proadminservice pod resource requests & limits | `{}` |
@@ -126,8 +126,8 @@ uatconfigservicemysql=true
 | `devconfigservice.enabled` | If true, install configservice in dev environment | `true` |
 | `devconfigservice.name` | Name of configservice in dev environment | `devconfigservice` |
 | `devconfigservice.replicaCount` | Desired number of configservice pods in dev environment | `1` |
-| `devconfigservice.image.repository` | Apollo devconfigservice image | `qct222/apollo-config-server` |
-| `devconfigservice.image.tag` | Apollo devconfigservice image version | `1.1.2` |
+| `devconfigservice.image.repository` | Apollo devconfigservice image | `qct222/apollo-configservice` |
+| `devconfigservice.image.tag` | Apollo devconfigservice image version | `1.3.0-SNAPSHOT` |
 | `devconfigservice.image.pullPolicy` | Apollo devconfigservice image pull policy | `IfNotPresent` |
 | `devconfigservice.extraEnv` | Additional Apollo devconfigservice container environments | `{}` |
 | `devconfigservice.resources` | devconfigservice pod resource requests & limits | `{}` |
@@ -145,8 +145,8 @@ uatconfigservicemysql=true
 | `fatconfigservice.enabled` | If true, install configservice in dev environment | `true` |
 | `fatconfigservice.name` | Name of configservice in dev environment | `fatconfigservice` |
 | `fatconfigservice.replicaCount` | Desired number of configservice pods in dev environment | `1` |
-| `fatconfigservice.image.repository` | Apollo fatconfigservice image | `qct222/apollo-config-server` |
-| `fatconfigservice.image.tag` | Apollo fatconfigservice image version | `1.1.2` |
+| `fatconfigservice.image.repository` | Apollo fatconfigservice image | `qct222/apollo-configservice` |
+| `fatconfigservice.image.tag` | Apollo fatconfigservice image version | `1.3.0-SNAPSHOT` |
 | `fatconfigservice.image.pullPolicy` | Apollo fatconfigservice image pull policy | `IfNotPresent` |
 | `fatconfigservice.extraEnv` | Additional Apollo fatconfigservice container environments | `{}` |
 | `fatconfigservice.resources` | fatconfigservice pod resource requests & limits | `{}` |
@@ -164,8 +164,8 @@ uatconfigservicemysql=true
 | `uatconfigservice.enabled` | If true, install configservice in dev environment | `true` |
 | `uatconfigservice.name` | Name of configservice in dev environment | `uatconfigservice` |
 | `uatconfigservice.replicaCount` | Desired number of configservice pods in dev environment | `1` |
-| `uatconfigservice.image.repository` | Apollo uatconfigservice image | `qct222/apollo-config-server` |
-| `uatconfigservice.image.tag` | Apollo uatconfigservice image version | `1.1.2` |
+| `uatconfigservice.image.repository` | Apollo uatconfigservice image | `qct222/apollo-configservice` |
+| `uatconfigservice.image.tag` | Apollo uatconfigservice image version | `1.3.0-SNAPSHOT` |
 | `uatconfigservice.image.pullPolicy` | Apollo uatconfigservice image pull policy | `IfNotPresent` |
 | `uatconfigservice.extraEnv` | Additional Apollo uatconfigservice container environments | `{}` |
 | `uatconfigservice.resources` | uatconfigservice pod resource requests & limits | `{}` |
@@ -183,8 +183,8 @@ uatconfigservicemysql=true
 | `proconfigservice.enabled` | If true, install configservice in dev environment | `true` |
 | `proconfigservice.name` | Name of configservice in dev environment | `proconfigservice` |
 | `proconfigservice.replicaCount` | Desired number of configservice pods in dev environment | `1` |
-| `proconfigservice.image.repository` | Apollo proconfigservice image | `qct222/apollo-config-server` |
-| `proconfigservice.image.tag` | Apollo proconfigservice image version | `1.1.2` |
+| `proconfigservice.image.repository` | Apollo proconfigservice image | `qct222/apollo-configservice` |
+| `proconfigservice.image.tag` | Apollo proconfigservice image version | `1.3.0-SNAPSHOT` |
 | `proconfigservice.image.pullPolicy` | Apollo proconfigservice image pull policy | `IfNotPresent` |
 | `proconfigservice.extraEnv` | Additional Apollo proconfigservice container environments | `{}` |
 | `proconfigservice.resources` | proconfigservice pod resource requests & limits | `{}` |
@@ -203,8 +203,8 @@ uatconfigservicemysql=true
 | `portal.enabled` | If true, install portal in dev environment | `true` |
 | `portal.name` | Name of portal in dev environment | `portal` |
 | `portal.replicaCount` | Desired number of portal pods in dev environment | `1` |
-| `portal.image.repository` | Apollo portal image | `qct222/apollo-portal-server` |
-| `portal.image.tag` | Apollo portal image version | `1.1.2` |
+| `portal.image.repository` | Apollo portal image | `qct222/apollo-portal` |
+| `portal.image.tag` | Apollo portal image version | `1.3.0-SNAPSHOT` |
 | `portal.image.pullPolicy` | Apollo portal image pull policy | `IfNotPresent` |
 | `portal.extraEnv` | Additional Apollo portal container environments | `{}` |
 | `portal.resources` | portal pod resource requests & limits | `{}` |
