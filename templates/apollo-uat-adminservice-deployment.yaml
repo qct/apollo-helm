@@ -24,8 +24,6 @@ spec:
           image: "{{ .Values.uatadminservice.image.repository }}:{{ .Values.uatadminservice.image.tag }}"
           imagePullPolicy: "{{ .Values.uatadminservice.image.pullPolicy }}"
           env:
-            - name: APOLLO_ADMIN_SERVICE_NAME
-              value: "service-apollo-admin-server-uat.sre"
             - name: "eureka.service.url"
               value: "http://apollo-uatconfigservice:8080/eureka/"
             {{- if .Values.uatconfigservicemysql.enabled }}
@@ -42,12 +40,15 @@ spec:
             {{- end }}
           ports:
             - containerPort: 8090
+          livenessProbe:
+            httpGet:
+              port: 8090
+              path: /
+            initialDelaySeconds: 60
           readinessProbe:
             httpGet:
               path: /
               port: 8090
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
           resources:
 {{ toYaml .Values.uatadminservice.resources | indent 12 }}
 #          volumeMounts:

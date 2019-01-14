@@ -24,8 +24,6 @@ spec:
           image: "{{ .Values.portal.image.repository }}:{{ .Values.portal.image.tag }}"
           imagePullPolicy: "{{ .Values.portal.image.pullPolicy }}"
           env:
-            - name: APOLLO_PORTAL_SERVICE_NAME
-              value: "service-apollo-portal-server.sre"
             {{ if .Values.devconfigservice.enabled -}}
             - name: DEV_META
               value: "http://apollo-devconfigservice:8080"
@@ -56,12 +54,15 @@ spec:
             {{- end }}
           ports:
             - containerPort: 8070
+          livenessProbe:
+            httpGet:
+              port: 8070
+              path: /
+            initialDelaySeconds: 60
           readinessProbe:
             httpGet:
               path: /
               port: 8070
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
           resources:
 {{ toYaml .Values.portal.resources | indent 12 }}
 #          volumeMounts:

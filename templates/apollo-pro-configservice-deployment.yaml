@@ -24,8 +24,6 @@ spec:
           image: "{{ .Values.proconfigservice.image.repository }}:{{ .Values.proconfigservice.image.tag }}"
           imagePullPolicy: "{{ .Values.proconfigservice.image.pullPolicy }}"
           env:
-            - name: APOLLO_CONFIG_SERVICE_NAME
-              value: "service-apollo-config-server-pro.sre"
             - name: "eureka.service.url"
               value: "http://apollo-proconfigservice:8080/eureka/"
           {{- if .Values.proconfigservicemysql.enabled }}
@@ -42,11 +40,15 @@ spec:
             {{- end }}
           ports:
             - containerPort: 8080
-          readinessProbe:
-            tcpSocket:
+          livenessProbe:
+            httpGet:
               port: 8080
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
+              path: /
+            initialDelaySeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
           resources:
 {{ toYaml .Values.proconfigservice.resources | indent 12 }}
 #          volumeMounts:

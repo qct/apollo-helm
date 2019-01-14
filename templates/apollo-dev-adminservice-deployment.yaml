@@ -24,8 +24,6 @@ spec:
           image: "{{ .Values.devadminservice.image.repository }}:{{ .Values.devadminservice.image.tag }}"
           imagePullPolicy: "{{ .Values.devadminservice.image.pullPolicy }}"
           env:
-            - name: APOLLO_ADMIN_SERVICE_NAME
-              value: "service-apollo-admin-server-dev.sre"
             - name: "eureka.service.url"
               value: "http://apollo-devconfigservice:8080/eureka/"
             {{- if .Values.devconfigservicemysql.enabled }}
@@ -42,12 +40,15 @@ spec:
             {{- end }}
           ports:
             - containerPort: 8090
+          livenessProbe:
+            httpGet:
+              port: 8090
+              path: /
+            initialDelaySeconds: 60
           readinessProbe:
             httpGet:
               path: /
               port: 8090
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
           resources:
 {{ toYaml .Values.devadminservice.resources | indent 12 }}
 #          volumeMounts:
