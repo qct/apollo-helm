@@ -19,6 +19,13 @@ spec:
         component: "{{ .Values.uatadminservice.name }}"
     spec:
 #      serviceAccountName: {{ template "apollo.serviceAccountName.uatadminservice" . }}
+      initContainers:
+      - name: init-eureka
+        image: busybox
+        command: ['sh', '-c', 'until nslookup apollo-uatconfigservice; do echo waiting for apollo-uatconfigservice; sleep 2; done;']
+      - name: init-mydb
+        image: busybox
+        command: ['sh', '-c', 'until nslookup apollo-uatconfigservicemysql; do echo waiting for apollo-uatconfigservicemysql; sleep 2; done;']
       containers:
         - name: {{ template "apollo-helm.name" . }}-{{ .Values.uatadminservice.name }}
           image: "{{ .Values.uatadminservice.image.repository }}:{{ .Values.uatadminservice.image.tag }}"

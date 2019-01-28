@@ -19,6 +19,10 @@ spec:
         component: "{{ .Values.portal.name }}"
     spec:
 #      serviceAccountName: {{ template "apollo.serviceAccountName.portal" . }}
+      initContainers:
+        - name: init-mydb
+          image: busybox
+          command: ['sh', '-c', 'until nslookup apollo-portalmysql; do echo waiting for apollo-portalmysql; sleep 2; done;']
       containers:
         - name: {{ template "apollo-helm.name" . }}-{{ .Values.portal.name }}
           image: "{{ .Values.portal.image.repository }}:{{ .Values.portal.image.tag }}"

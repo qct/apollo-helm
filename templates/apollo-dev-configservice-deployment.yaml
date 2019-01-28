@@ -19,6 +19,10 @@ spec:
         component: "{{ .Values.devconfigservice.name }}"
     spec:
 #      serviceAccountName: {{ template "apollo.serviceAccountName.devconfigservice" . }}
+      initContainers:
+      - name: init-mydb
+        image: busybox
+        command: ['sh', '-c', 'until nslookup apollo-devconfigservicemysql; do echo waiting for apollo-devconfigservicemysql; sleep 2; done;']
       containers:
         - name: {{ template "apollo-helm.name" . }}-{{ .Values.devconfigservice.name }}
           image: "{{ .Values.devconfigservice.image.repository }}:{{ .Values.devconfigservice.image.tag }}"

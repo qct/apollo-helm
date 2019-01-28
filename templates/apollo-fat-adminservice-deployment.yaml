@@ -19,6 +19,13 @@ spec:
         component: "{{ .Values.fatadminservice.name }}"
     spec:
 #      serviceAccountName: {{ template "apollo.serviceAccountName.fatadminservice" . }}
+      initContainers:
+      - name: init-eureka
+        image: busybox
+        command: ['sh', '-c', 'until nslookup apollo-fatconfigservice; do echo waiting for apollo-fatconfigservice; sleep 2; done;']
+      - name: init-mydb
+        image: busybox
+        command: ['sh', '-c', 'until nslookup apollo-fatconfigservicemysql; do echo waiting for apollo-fatconfigservicemysql; sleep 2; done;']
       containers:
         - name: {{ template "apollo-helm.name" . }}-{{ .Values.fatadminservice.name }}
           image: "{{ .Values.fatadminservice.image.repository }}:{{ .Values.fatadminservice.image.tag }}"
